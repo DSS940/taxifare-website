@@ -11,15 +11,14 @@ import numpy as np
 
 st.title("please enter the parameters of your ride :) ")
 
-pick_up_address = st.text_input('please enter your pick up location', '412 Macon Street,Brooklyn,NY,11233')
+pick_up_address = st.text_input('please enter your pick up location','')
 st.write('your current location is', pick_up_address)
 
 
-drop_off_address = st.text_input('please enter your drop off location', '1123 East Tremont Avenue,Bronx,NY,10460')
+drop_off_address = st.text_input('please enter your drop off location','')
 st.write('you want to go to', drop_off_address)
 
-pick_up_address= '412 Macon Street,Brooklyn,NY,11233'
-drop_off_address='1123 East Tremont Avenue,Bronx,NY,10460'
+
 
 geolocator = Nominatim(user_agent="myApp")
 df = pd.DataFrame({'Location':
@@ -28,6 +27,8 @@ df = pd.DataFrame({'Location':
 df[['latitude', 'longitude']] =  df['Location'].apply(
     geolocator.geocode).apply(lambda x: pd.Series(
         [x.latitude, x.longitude], index=['location_lat', 'location_long']))
+
+df
 
 def get_map_data():
 
