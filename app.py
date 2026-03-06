@@ -52,19 +52,23 @@ passenger_count = st.number_input("Passenger Count", min_value=1, max_value=8, v
 url = 'https://taxifare.lewagon.ai/predict'
 
 if st.button("Get Fare Prediction"):
-    params = {
-        "pickup_datetime": str(ride_datetime),
-        "pickup_longitude": pick_up[1],
-        "pickup_latitude": pick_up[0],
-        "dropoff_longitude": drop_off[1],
-        "dropoff_latitude": drop_off[0],
-        "passenger_count": passenger_count
-    }
-    response = requests.get(url, params=params)
-    prediction = response.json()
-    prediction = response.json()["fare"]
-    st.success(f"Predicted fare: ${prediction:.2f}")
-    st.balloons()
+
+    if pick_up is None or drop_off is None:
+        st.error("Please enter valid pickup and dropoff addresses.")
+    else:
+        params = {
+            "pickup_datetime": str(ride_datetime),
+            "pickup_longitude": pick_up[1],
+            "pickup_latitude": pick_up[0],
+            "dropoff_longitude": drop_off[1],
+            "dropoff_latitude": drop_off[0],
+            "passenger_count": passenger_count
+        }
+
+        response = requests.get(url, params=params)
+        prediction = response.json()
+        st.write("Predicted fare:", prediction)
+        st.balloons()
 
 map_data = []
 
