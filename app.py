@@ -4,6 +4,8 @@ import requests
 from geopy.geocoders import Nominatim
 import pandas as pd
 import numpy as np
+from geopy.exc import GeocoderUnavailable, GeocoderTimedOut, GeocoderServiceError
+
 
 
 
@@ -18,17 +20,19 @@ pick_up_address = st.text_input('please enter your pick up location','')
 drop_off_address = st.text_input('please enter your drop off location','')
 
 
-geolocator = Nominatim(user_agent="myApp")
+geolocator = Nominatim(user_agent="myApp", timeout=5)
 
 def geocode_address(address):
-    """Convert address string to (lat, lon, full_address) or None."""
-    if not address.strip():
+    if not address or not address.strip():
         return None
-    else:
+    try:
         result = geolocator.geocode(address)
         if result:
-            return result.latitude, result.longitude, result.address
+            return (result.latitude, result.longitude, result.address)
         return None
+    except (GeocoderUnavailable, GeocoderTimedOut, GeocoderServiceError):
+        return None
+
 
 pick_up = geocode_address(pick_up_address)
 drop_off = geocode_address(drop_off_address)
